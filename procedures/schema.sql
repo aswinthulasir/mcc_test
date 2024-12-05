@@ -1,5 +1,5 @@
 
-
+note: create database with name mcc_ict
 CREATE TABLE users (
     ->     id VARCHAR(255) PRIMARY KEY,
     ->     email VARCHAR(255) UNIQUE NOT NULL,
