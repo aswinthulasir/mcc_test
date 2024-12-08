@@ -1,0 +1,54 @@
+{
+    "super_admin_id": "superadmin-id",
+    "state_name": "Kerala"
+}
+
+//view activities
+{
+    "super_admin_id": "superadmin-id"
+}
+
+POST /api/admin/add-state
+GET /api/admin/view-activities
+
+
+-- States can add regional centers
+
+POST /api/admin/add-regional-center
+GET /api/admin/view-regional-centers
+
+Payload eg:
+
+{
+    "state_admin_id": "state-admin-id",
+    "center_name": "New Government Hospital",
+    "type": "Government Hospital",
+    "region_id": "region-id",
+    "admin_id": "admin-id"
+}
+
+
+-- Extreme Users Controllers
+
+POST /api/user/add-user
+ Payload
+ {
+    "region_admin_id": "region-admin-id",
+    "name": "New User",
+    "email": "newuser@example.com",
+    "role_id": 3, 
+    "category_ids": [1, 2]  // Category IDs (1: Hospital, 2: PHC, etc.)
+}
+
+POST /api/user/delete-user
+Payload:
+
+{
+    "region_admin_id": "region-admin-id",
+    "user_id": "user-id-to-delete"
+}
+
+View All Users (Super Admin Only):
+
+GET /api/user/view-all-users
+

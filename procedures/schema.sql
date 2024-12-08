@@ -58,7 +58,8 @@ CREATE TABLE roles (
 
     ->     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp of role creation
     ->     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Timestamp of the last update
-    -> );
+    ->
+    );
 
 INSERT INTO roles (role_name) VALUES
     -> ('Superadmin'),
@@ -67,3 +68,58 @@ INSERT INTO roles (role_name) VALUES
 
 
 
+
+-- log table for admin view- he can view all the tables for viewing multi level activities
+
+CREATE TABLE activity_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    performed_by VARCHAR(255) NOT NULL, -- ID of the user who performed the action
+    action VARCHAR(255) NOT NULL,      -- Description of the action
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (performed_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+
+
+-- Create table for user categories (Hospitals, PHCs, etc.)
+CREATE TABLE user_types (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type_name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Insert user categories (Hospitals, PHCs, Laboratories, etc.)
+INSERT INTO user_types (type_name) VALUES
+('Hospital'),
+('PHC'),
+('Laboratory'),
+('UserX'),
+('Volunteers');
+
+-- Create the user(Here it refer to the types of users in the last level) table
+CREATE TABLE user (
+    id VARCHAR(255) PRIMARY KEY, 
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    role_id INT NOT NULL, -- reference to roles
+    state_id INT,         -- optional, for association with states
+    region_id VARCHAR(255) -- optional, for regional association
+);
+
+-- User category relationship table (to associate users with categories)
+CREATE TABLE user_category (
+    user_id VARCHAR(255),
+    category_id INT,
+    PRIMARY KEY (user_id, category_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES user_types(id) ON DELETE CASCADE
+);
+
+-- Activity logs to track actions like adding/deleting users
+CREATE TABLE activity_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    performed_by VARCHAR(255) NOT NULL,  -- User ID who performed the action (Regional Center Admin)
+    action VARCHAR(255) NOT NULL,        -- Action description (Add/Delete)
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (performed_by) REFERENCES users(id) ON DELETE CASCADE
+);
